@@ -1,0 +1,29 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+table td {
+	border: 5px solid rgb(30, 179, 0);
+	width: 80px;
+	height: 80px;
+}
+
+.unvisited {
+	filter: opacity(30%);
+	background-color: black;
+}
+
+.visited {
+	background-color: rgb(35, 166, 199);
+}
+
+.stinky {
+	background-color: rgb(86, 86, 247);
+}
+
+.breezy {
+	background-color: aquamarine;
+}
