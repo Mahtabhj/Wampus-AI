@@ -36,16 +36,16 @@ const Board = () => {
 let input = Array(row_count*col_count)
 		let gameStarted = false;
 		input = [
-			'A','S','S','S','S','S','S','S','S','S',
+			'A','S','S','S','S','W','S','S','W','S',
 			'S','S','S','S','S','S','S','S','S','S',
-			'S','S','W','S','S','G','S','S','S','S',
+			'S','S','W','S','S','G','S','S','P','S',
 			'S','S','S','S','S','S','S','S','S','S',
-			'S','S','S','S','G','S','S','S','S','S',
-			'S','S','S','S','S','S','P','S','S','S',
+			'S','S','S','S','G','S','S','S','W','S',
+			'S','S','P','S','S','S','P','S','S','S',
 			'S','S','S','S','S','S','S','S','S','S',
-			'S','S','S','S','S','S','S','S','S','S',
-			'S','S','S','S','S','S','S','S','S','S',
-			'S','S','S','S','S','S','S','S','S','S'
+			'W','S','S','W','S','S','S','P','S','S',
+			'S','S','S','S','S','P','S','S','W','S',
+			'S','P','S','S','S','S','S','S','S','S'
 		];
 			
 		if(title===1){
@@ -69,16 +69,16 @@ console.log(title)
 		else if (title==="3"){
 			console.log(title)
 			input = [
-				'A','S','S','S','S','S','S','S','S','S',
+				'A','S','S','S','S','W','S','S','W','S',
 				'S','S','S','S','S','S','S','S','S','S',
-				'S','S','W','S','S','G','S','S','S','S',
+				'S','S','W','S','S','G','S','S','P','S',
 				'S','S','S','S','S','S','S','S','S','S',
-				'S','S','S','S','G','S','S','S','S','S',
-				'S','S','S','S','S','S','P','S','S','S',
+				'S','S','S','S','G','S','S','S','W','S',
+				'S','S','P','S','S','S','P','S','S','S',
 				'S','S','S','S','S','S','S','S','S','S',
-				'S','S','S','S','S','S','S','S','S','S',
-				'S','S','S','S','S','S','S','S','S','S',
-				'S','S','S','S','S','S','S','S','S','S'
+				'W','S','S','W','S','S','S','P','S','S',
+				'S','S','S','S','S','P','S','S','W','S',
+				'S','P','S','S','S','S','S','S','S','S'
 			];
 		}
 		
@@ -91,7 +91,7 @@ console.log(title)
 	const [stenches, setStenches] = useState(Array(row_count*col_count).fill(-1))
 	const [breezees, setBreezees] = useState(Array(row_count*col_count).fill(-1))
 	const [gliters, setGliters] = useState(Array(row_count*col_count).fill(-1))
-
+    const [previous, setPrevious] = useState(Array(row_count*col_count).fill(-1))
 	const [nextmove,setMove] = useState("Right");
 	
 	const startGame = () => {
@@ -137,17 +137,24 @@ console.log(title)
 			cellStates[to] = 'visited'
 			setAgentAddress(to)
 			setcellState(cellStates)
-         
-			if(checkForWumpus(to, cells)){
+			
+         if(checkForPit(to, cells)&&checkForWumpus(to,cells)){
+				let arr = [...gliters]
+				arr[to] = 1
+				setGliters(arr)
+				cellStates[to] = 'stinky_breezy'
+			}
+			else if(checkForWumpus(to, cells)){
 				let arr = [...stenches]
 				arr[to] = 1
 				setStenches(arr)
 				cellStates[to] = 'stinky'
-				
+				console.log("sti")
+				console.log(to)
 				if(cellStates[to-1]==="unvisited"){
-					console.log(cellStates[to-1])
+					
 					setMove( "left")
-					console.log(nextmove)
+					
 				}
 			}
 			else if(checkForPit(to, cells)){
@@ -156,19 +163,233 @@ console.log(title)
 				setBreezees(arr)
 				cellStates[to] = 'breezy'
 			}
-			else if(checkForGold(to, cells)){
-				let arr = [...gliters]
-				arr[to] = 1
-				setGliters(arr)
-				cellStates[to] = 'gliter'
-			}
 			
+			
+			if(cellStates[to]==="visited"){
+				const num  = Math.floor(Math.random() * 4);
+				
+				if(num===0)
+				{
+					if(checkDown(to))
+					{
+						setMove( "down")
+				        
+					}
+					else if(checkUp(to))
+					{
+						setMove( "UP")
+				       
+					}
+				}
+				else if(num===1)
+				{
+					if(checkUp(to))
+					{
+						setMove( "UP")
+				        
+					}
 
-            
+					else if(checkDown(to))
+					{
+						setMove( "down")
+				        
+					}
+				}
+				else if(num===2)
+				{
+					if(checkRight(to))
+					{
+						setMove( "Right")
+				       
+					}
+					else if(checkLeft(to))
+					{
+						setMove( "Left")
+				       
+					}
+				}
+				else if(num===3)
+				{
+					if(checkLeft(to))
+					{
+						setMove( "Left")
+				       
+					}
+					else if(checkRight(to))
+					{
+						setMove( "Right")
+				 
+					}
+				}
+					
+			}
 
 		},1000)
 	}
 
+	const shootUp = () => {
+		let arr = [...stenches]
+		// arr[] = 0
+		setStenches(arr)
+		cells[agentAddress - 10] = 'S';
+		console.log(cells[agentAddress - 10] )
+		if(cellState[agentAddress - 11]=== "stinky"){
+			cellState[agentAddress - 11]= "visited";
+			arr [agentAddress - 11]=0;
+		}
+		if(cellState[agentAddress - 9]=== "stinky"){
+			cellState[agentAddress - 9]= "visited";
+			arr [agentAddress - 9]=0;
+		}
+		if(cellState[agentAddress]=== "stinky"){
+			cellState[agentAddress]= "visited";
+			arr [agentAddress]=0;
+		}
+		if(cellState[agentAddress-20]=== "stinky"){
+			cellState[agentAddress-20]= "visited";
+			arr [agentAddress - 20]=0;
+		}
+		if(cellState[agentAddress - 11]=== "stinky_breezy"){
+			cellState[agentAddress - 11]= "breezy";
+			arr [agentAddress - 11]=0;
+		}
+		if(cellState[agentAddress - 9]=== "stinky_breezy"){
+			cellState[agentAddress - 9]= "breezy";
+			arr [agentAddress - 9]=0;
+		}
+		if(cellState[agentAddress]=== "stinky_breezy"){
+			cellState[agentAddress]= "breezy";
+			arr [agentAddress]=0;
+		}
+		if(cellState[agentAddress-20]=== "stinky_breezy"){
+			cellState[agentAddress-20]= "breezy";
+			arr [agentAddress - 20]=0;
+		}
+		
+	}
+
+	const shootRight = () => {
+		let arr = [...stenches]
+		// arr[] = 0
+		setStenches(arr)
+		cells[agentAddress+1] = 'S';
+		console.log(cells[agentAddress - 10] )
+		if(cellState[agentAddress+2]=== "stinky"){
+			cellState[agentAddress+2]= "visited";
+			arr [agentAddress+2]=0;
+		}
+		if(cellState[agentAddress-9]=== "stinky"){
+			cellState[agentAddress - 9]= "visited";
+			arr [agentAddress - 9]=0;
+		}
+		if(cellState[agentAddress+11]=== "stinky"){
+			cellState[agentAddress+11]= "visited";
+			arr [agentAddress+11]=0;
+		}
+		if(cellState[agentAddress]=== "stinky"){
+			cellState[agentAddress]= "visited";
+			arr [agentAddress]=0;
+		}
+		if(cellState[agentAddress - 9]=== "stinky_breezy"){
+			cellState[agentAddress - 9]= "breezy";
+			arr [agentAddress - 9]=0;
+		}
+		if(cellState[agentAddress +11]=== "stinky_breezy"){
+			cellState[agentAddress +11]= "breezy";
+			arr [agentAddress +11]=0;
+		}
+		if(cellState[agentAddress]=== "stinky_breezy"){
+			cellState[agentAddress]= "breezy";
+			arr [agentAddress]=0;
+		}
+		if(cellState[agentAddress+2]=== "stinky_breezy"){
+			cellState[agentAddress+2]= "breezy";
+			arr [agentAddress +2]=0;
+		}
+		
+	}
+	
+	const shootLeft = () => {
+		let arr = [...stenches]
+		// arr[] = 0
+		setStenches(arr)
+		cells[agentAddress -1] = 'S';
+		console.log(cells[agentAddress - 10] )
+		if(cellState[agentAddress - 11]=== "stinky"){
+			cellState[agentAddress - 11]= "visited";
+			arr [agentAddress - 11]=0;
+		}
+		if(cellState[agentAddress - 2]=== "stinky"){
+			cellState[agentAddress - 2]= "visited";
+			arr [agentAddress - 2]=0;
+		}
+		if(cellState[agentAddress]=== "stinky"){
+			cellState[agentAddress]= "visited";
+			arr [agentAddress]=0;
+		}
+		if(cellState[agentAddress+9]=== "stinky"){
+			cellState[agentAddress+9]= "visited";
+			arr [agentAddress +9]=0;
+		}
+		if(cellState[agentAddress - 11]=== "stinky_breezy"){
+			cellState[agentAddress - 11]= "breezy";
+			arr [agentAddress - 11]=0;
+		}
+		if(cellState[agentAddress + 9]=== "stinky_breezy"){
+			cellState[agentAddress + 9]= "breezy";
+			arr [agentAddress + 9]=0;
+		}
+		if(cellState[agentAddress]=== "stinky_breezy"){
+			cellState[agentAddress]= "breezy";
+			arr [agentAddress]=0;
+		}
+		if(cellState[agentAddress-2]=== "stinky_breezy"){
+			cellState[agentAddress-2]= "breezy";
+			arr [agentAddress - 2]=0;
+		}
+		
+	}
+	
+	const shootDown = () => {
+		let arr = [...stenches]
+		// arr[] = 0
+		setStenches(arr)
+		cells[agentAddress + 10] = 'S';
+		console.log(cells[agentAddress - 10] )
+		if(cellState[agentAddress + 11]=== "stinky"){
+			cellState[agentAddress + 11]= "visited";
+			arr [agentAddress + 11]=0;
+		}
+		if(cellState[agentAddress + 9]=== "stinky"){
+			cellState[agentAddress +9]= "visited";
+			arr [agentAddress + 9]=0;
+		}
+		if(cellState[agentAddress]=== "stinky"){
+			cellState[agentAddress]= "visited";
+			arr [agentAddress]=0;
+		}
+		if(cellState[agentAddress+20]=== "stinky"){
+			cellState[agentAddress+20]= "visited";
+			arr [agentAddress + 20]=0;
+		}
+		if(cellState[agentAddress + 11]=== "stinky_breezy"){
+			cellState[agentAddress + 11]= "breezy";
+			arr [agentAddress + 11]=0;
+		}
+		if(cellState[agentAddress + 9]=== "stinky_breezy"){
+			cellState[agentAddress + 9]= "breezy";
+			arr [agentAddress + 9]=0;
+		}
+		if(cellState[agentAddress]=== "stinky_breezy"){
+			cellState[agentAddress]= "breezy";
+			arr [agentAddress]=0;
+		}
+		if(cellState[agentAddress+20]=== "stinky_breezy"){
+			cellState[agentAddress+20]= "breezy";
+			arr [agentAddress + 20]=0;
+		}
+		
+	}
 	const makeMove = (to,depth) => {
 		console.log("edpth", depth);
 		if(depth === 3 || checkForWumpus(agentAddress,cells) || checkForPit(agentAddress,cells))
@@ -257,7 +478,7 @@ console.log(title)
 						}
 						{
 							breezees[num] === 1 && stenches[num] === 1 && agentAddress === num?
-                            	<img src={breezestench} alt="breeze_stench" height={70} width={70}/>
+                            	<img src={gliter} alt="breeze_stench" height={70} width={70}/>
 								:
 								<></>
 						}
@@ -293,6 +514,11 @@ console.log(title)
 	return (
 		<div className='container mt-5' id='main'>
 			<button onClick={startGame}>Start Game</button>
+		
+			<button type="button" class="btn btn-primary" onClick={shootUp}>Shoot Up</button>
+			<button type="button" class="btn btn-primary" onClick={shootRight}>Shoot Right </button>
+			<button type="button" class="btn btn-primary" onClick={shootDown}>Shoot Down </button>
+			<button type="button" class="btn btn-primary" onClick={shootLeft}>Shoot Left </button>
 			<h1>{nextmove}</h1>
 			<select 
    type="text"
