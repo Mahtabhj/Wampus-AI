@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useKeypress from 'react-use-keypress';
 import './board.css';
-import { checkForWumpus, checkForPit, checkForGold, checkDown, checkUp, checkRight, checkLeft } from './functionalities';
+import { checkForWumpus, checkForPit, checkForGold, checkDown, checkUp, checkRight, checkLeft, calculateRisk } from './functionalities';
 import agent from '../images/agent.png';
 import wumpus from '../images/wumpus.png';
 import gold from '../images/gold.png'
@@ -39,13 +39,13 @@ let input = Array(row_count*col_count)
 			'A','S','S','S','S','W','S','S','W','S',
 			'S','S','S','S','S','S','S','S','S','S',
 			'S','S','W','S','S','G','S','S','P','S',
-			'S','S','S','S','S','S','S','S','S','S',
+			'W','S','S','S','S','S','S','W','S','S',
 			'S','S','S','S','G','S','S','S','W','S',
-			'S','S','P','S','S','S','P','S','S','S',
-			'S','S','S','S','S','S','S','S','S','S',
+			'P','S','P','S','S','S','P','S','S','S',
+			'S','S','S','S','S','S','S','S','S','P',
 			'W','S','S','W','S','S','S','P','S','S',
 			'S','S','S','S','S','P','S','S','W','S',
-			'S','P','S','S','S','S','S','S','S','S'
+			'S','P','S','S','P','S','W','S','S','S'
 		];
 			
 		if(title===1){
@@ -134,9 +134,12 @@ console.log(title)
 		setTimeout(()=>{
 			console.log("saas")
 			let cellStates = [...cellState]
+			let previou = [...previous]
 			cellStates[to] = 'visited'
+			 previou[to] = agentAddress;
 			setAgentAddress(to)
 			setcellState(cellStates)
+			
 			
          if(checkForPit(to, cells)&&checkForWumpus(to,cells)){
 				let arr = [...gliters]
@@ -149,8 +152,7 @@ console.log(title)
 				arr[to] = 1
 				setStenches(arr)
 				cellStates[to] = 'stinky'
-				console.log("sti")
-				console.log(to)
+		
 				if(cellStates[to-1]==="unvisited"){
 					
 					setMove( "left")
@@ -163,66 +165,109 @@ console.log(title)
 				setBreezees(arr)
 				cellStates[to] = 'breezy'
 			}
-			
-			
-			if(cellStates[to]==="visited"){
-				const num  = Math.floor(Math.random() * 4);
-				
-				if(num===0)
-				{
-					if(checkDown(to))
-					{
-						setMove( "down")
-				        
-					}
-					else if(checkUp(to))
-					{
-						setMove( "UP")
-				       
-					}
-				}
-				else if(num===1)
-				{
-					if(checkUp(to))
-					{
-						setMove( "UP")
-				        
-					}
-
-					else if(checkDown(to))
-					{
-						setMove( "down")
-				        
-					}
-				}
-				else if(num===2)
-				{
-					if(checkRight(to))
-					{
-						setMove( "Right")
-				       
-					}
-					else if(checkLeft(to))
-					{
-						setMove( "Left")
-				       
-					}
-				}
-				else if(num===3)
-				{
-					if(checkLeft(to))
-					{
-						setMove( "Left")
-				       
-					}
-					else if(checkRight(to))
-					{
-						setMove( "Right")
-				 
-					}
-				}
-					
+			var min =0;
+			var up = 0,right =0 ,left =0, down=0;
+			if(calculateRisk((to-10),cellStates)===undefined)
+			{
+			min = Math.min(calculateRisk((to+1),cellStates),calculateRisk((to-1),cellStates),calculateRisk((to+10),cellStates));
 			}
+			else 
+			{
+			min = Math.min(calculateRisk((to-10),cellStates),calculateRisk((to+1),cellStates),calculateRisk((to-1),cellStates),calculateRisk((to+10),cellStates));
+			}
+            up = calculateRisk((to-10),cellStates)
+			down = calculateRisk((to+10),cellStates)
+			right = calculateRisk((to+1),cellStates)
+			left = calculateRisk((to-1),cellStates)
+             var arr=[0,0,0,0];
+
+
+			console.log(calculateRisk((to+1),cellStates))
+			console.log(calculateRisk((to-1),cellStates))
+			console.log(calculateRisk((to+10),cellStates))
+			console.log(calculateRisk((to-10),cellStates))
+		
+			console.log("Min = "+min)
+			console.log(previou[to])
+			console.log(to)
+			
+			if(min === calculateRisk((to+1),cellStates))
+			{
+				setMove("Right")
+				arr[0]=1;
+			}
+			else if(min === calculateRisk((to-1),cellStates))
+			{
+				setMove("Left")
+				arr[1]=1;
+			}
+			else if(min === calculateRisk((to+10),cellStates))
+			{
+				setMove("Down")
+				arr[2]=1;
+			}
+			else if(min === calculateRisk((to-10),cellStates))
+			{
+				setMove("Up")
+				arr[3]=1;
+			 }
+			// up = calculateRisk((to-10),cellStates)
+			// down = calculateRisk((to+10),cellStates)
+			// right = calculateRisk((to+1),cellStates)
+			// left = calculateRisk((to-1),cellStates)
+            //  var arr=[0,0,0,0];
+            // var flag =0 ;
+
+			// console.log(calculateRisk((to+1),cellStates))
+			// console.log(calculateRisk((to-1),cellStates))
+			// console.log(calculateRisk((to+10),cellStates))
+			// console.log(calculateRisk((to-10),cellStates))
+		
+			// console.log("Min = "+min)
+			// console.log(previou[to])
+			// console.log(to)
+			
+			// if(min === calculateRisk((to+1),cellStates))
+			// {
+			// 	setMove("Right")
+			// 	arr[0]=1;
+			// 	flag = flag +1;
+			// }
+			// if(min === calculateRisk((to-1),cellStates))
+			// {
+			// 	setMove("Left")
+			// 	arr[1]=1;
+			// 	flag = flag +1;
+			// }
+			// if(min === calculateRisk((to+10),cellStates))
+			// {
+			// 	setMove("Down")
+			// 	arr[2]=1;
+			// 	flag = flag +1;
+			// }
+			// if(min === calculateRisk((to-10),cellStates))
+			// {
+			// 	setMove("Up")
+			// 	arr[3]=1;
+			// 	flag = flag +1;
+			// }
+            
+            //  if(flag>1){
+			// 	const num  = Math.floor(Math.random() * flag);
+			// 	if(num===0&&arr[0]===1){
+			// 		setMove("Right")
+			// 	}
+			// 	if(num===1&&arr[1]===1){
+			// 		setMove("Left")
+			// 	}
+			// 	if(num===2&&arr[2]===1){
+			// 		setMove("Down")
+			// 	}
+			// 	if(num===3&&arr[3]===1){
+			// 		setMove("UP")
+			// 	}
+			//  }
+
 
 		},1000)
 	}
@@ -232,7 +277,7 @@ console.log(title)
 		// arr[] = 0
 		setStenches(arr)
 		cells[agentAddress - 10] = 'S';
-		console.log(cells[agentAddress - 10] )
+	
 		if(cellState[agentAddress - 11]=== "stinky"){
 			cellState[agentAddress - 11]= "visited";
 			arr [agentAddress - 11]=0;
@@ -273,7 +318,7 @@ console.log(title)
 		// arr[] = 0
 		setStenches(arr)
 		cells[agentAddress+1] = 'S';
-		console.log(cells[agentAddress - 10] )
+	
 		if(cellState[agentAddress+2]=== "stinky"){
 			cellState[agentAddress+2]= "visited";
 			arr [agentAddress+2]=0;
@@ -314,7 +359,7 @@ console.log(title)
 		// arr[] = 0
 		setStenches(arr)
 		cells[agentAddress -1] = 'S';
-		console.log(cells[agentAddress - 10] )
+		
 		if(cellState[agentAddress - 11]=== "stinky"){
 			cellState[agentAddress - 11]= "visited";
 			arr [agentAddress - 11]=0;
@@ -355,7 +400,7 @@ console.log(title)
 		// arr[] = 0
 		setStenches(arr)
 		cells[agentAddress + 10] = 'S';
-		console.log(cells[agentAddress - 10] )
+		
 		if(cellState[agentAddress + 11]=== "stinky"){
 			cellState[agentAddress + 11]= "visited";
 			arr [agentAddress + 11]=0;
@@ -433,8 +478,32 @@ console.log(title)
   }
 	const Cell = ({ num }) => {
 		return <td className={cellState[num]}>
-                    <div>
-                        {
+                    <div>{
+							num == agentAddress && breezees[num] != 1 && stenches[num] != 1 &&gliters[num]!=1?
+                            	<img src={agent} alt="agent" height={70} width={70}/>
+								:
+								<></>
+						}
+					{
+							num ==agentAddress && cells[num] === 'W'?
+                            	<img src={wumpus} alt="wumpus" height={70} width={70}/>
+								:
+								<></>
+						}
+						{
+							num ==agentAddress &&cells[num] === 'G'?
+                            	<img src={gold} alt="gold" height={70} width={70}/>
+								:
+								<></>
+						}
+						{
+							num ==agentAddress &&cells[num] === 'P'?
+                            	<img src={pit} alt="pit" height={70} width={70}/>
+								:
+								<></>
+						}
+						
+                        {/* {
 							num == agentAddress && breezees[num] != 1 && stenches[num] != 1 &&gliters[num]!=1?
                             	<img src={agent} alt="agent" height={70} width={70}/>
 								:
@@ -481,7 +550,7 @@ console.log(title)
                             	<img src={gliter} alt="breeze_stench" height={70} width={70}/>
 								:
 								<></>
-						}
+						} */}
                     </div>
             </td>;
 	};
