@@ -33,3 +33,198 @@ export function checkDown(agentAddress){
     if((agentAddress+10)< 100) return true;
     else return false;
 }
+export function calculateRisk(address,cellStates){
+  var risk=0;
+  var flag= 0;
+  if(cellStates[address]==="visited")
+  {
+     risk = risk + 5;
+   
+     return risk;
+  }
+  else if(cellStates[address]==="stinky")
+  {
+    risk = risk + 10; return risk;
+  }
+  else if(cellStates[address]==="breezy")
+  {
+    risk = risk + 10; return risk;
+  }
+  else if(cellStates[address]==="stinky_breezy")
+  {
+    risk = risk + 20; return risk;
+  }
+  else if(cellStates[address]==="unvisited")
+  {
+    if((address+1)%10 !== 0 &&cellStates[address+1]==="stinky")
+    {
+          risk = risk +25;
+          flag = 1;
+          
+    }
+    if((address-1)%10 !== 9&&cellStates[address-1]==="stinky")
+    {
+          risk = risk +25; 
+          flag = 1;
+         
+    }
+    if(cellStates[address+10]==="stinky")
+    {
+          risk = risk +25;
+          flag = 1;
+    }
+    if(cellStates[address-10]==="stinky")
+    {
+          risk = risk +25;
+          flag = 1;
+    }
+    if((address+1)%10 !== 0 &&cellStates[address+1]==="breezy")
+    {
+          risk = risk +25;
+          if(flag===1)
+          {
+            risk = 0;
+          }
+    }
+    if((address-1)%10 !== 9&&cellStates[address-1]==="breezy")
+    {
+          risk = risk +25;
+          if(flag===1)
+          {
+            risk = 0;
+          }
+    }
+    if(cellStates[address+10]==="breezy")
+    {
+          risk = risk +25;
+          if(flag===1)
+          {
+            risk = 0;
+          }
+    }
+    if(cellStates[address-10]==="breezy")
+    {
+          risk = risk +25;
+          if(flag===1)
+          {
+            risk = 0;
+          }
+    }
+    return risk;
+  }
+  
+}
+
+export function calculateRiskTest(present,address,cellStates){
+  var risk=0;
+  var flag= 0;
+  if(cellStates[address]==="visited")
+  {
+     risk = risk + 5;
+   
+     return risk;
+  }
+  else if(cellStates[address]==="stinky")
+  {
+    risk = risk + 10; return risk;
+  }
+  else if(cellStates[address]==="breezy")
+  {
+    risk = risk + 10; return risk;
+  }
+  else if(cellStates[address]==="stinky_breezy")
+  {
+    risk = risk + 20; return risk;
+  }
+  else if(cellStates[address]==="unvisited")
+  {
+    if((address+1)%10 !== 0 &&cellStates[address+1]==="stinky")
+    {
+          risk = risk +25;
+          flag = 1;
+          
+    }
+    if((address-1)%10 !== 9&&cellStates[address-1]==="stinky")
+    {
+          risk = risk +25; 
+          flag = 1;
+         
+    }
+    if(cellStates[address+10]==="stinky")
+    {
+          risk = risk +25;
+          flag = 1;
+    }
+    if(cellStates[address-10]==="stinky")
+    {
+          risk = risk +25;
+          flag = 1;
+    }
+    if((address+1)%10 !== 0 &&cellStates[address+1]==="breezy")
+    {
+          risk = risk +25;
+          if(flag===1)
+          {
+            risk = 0;
+          }
+    }
+    if((address-1)%10 !== 9&&cellStates[address-1]==="breezy")
+    {
+          risk = risk +25;
+          if(flag===1)
+          {
+            risk = 0;
+          }
+    }
+    if(cellStates[address+10]==="breezy")
+    {
+          risk = risk +25;
+          if(flag===1)
+          {
+            risk = 0;
+          }
+    }
+    if(cellStates[address-10]==="breezy")
+    {
+          risk = risk +25;
+          if(flag===1)
+          {
+            risk = 0;
+          }
+    }
+    if((address+1)%10 !== 0 &&cellStates[address+1]==="stinky_breezy")
+    {
+          risk = risk +25;
+          
+    }
+    if((address-1)%10 !== 9&&cellStates[address-1]==="stinky_breezy")
+    {
+          risk = risk +25;
+          
+    }
+    if(cellStates[address+10]==="stinky_breezy")
+    {
+          risk = risk +25;
+          
+    }
+    if(cellStates[address-10]==="stinky_breezy")
+    {
+          risk = risk +25;
+          
+    }
+    if(cellStates[present]==="visited" && risk ===25)
+    {
+      risk = 0;
+    }
+    if(cellStates[present]==="visited" && risk ===50)
+    {
+      risk = 0;
+    }
+    if(cellStates[present]==="visited" && risk ===75)
+    {
+      risk = 0;
+    }
+    return risk;
+  }
+  
+}

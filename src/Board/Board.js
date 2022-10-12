@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import useKeypress from 'react-use-keypress';
 import './board.css';
-import { checkForWumpus, checkForPit, checkForGold, checkDown, checkUp, checkRight, checkLeft, calculateRisk } from './functionalities';
+import { checkForWumpus, checkForPit, checkForGold, checkDown, checkUp, checkRight, checkLeft, calculateRisk,calculateRiskTest } from './functionalities';
 import agent from '../images/agent.png';
 import wumpus from '../images/wumpus.png';
-import gold from '../images/gold.png'
+import gold from '../images/download.jpeg'
+import gold2 from '../images/gold.png'
 import pit from '../images/pit.png'
 import stench from '../images/stench.png'
 import breeze from '../images/breeze.png'
@@ -36,16 +37,16 @@ const Board = () => {
 let input = Array(row_count*col_count)
 		let gameStarted = false;
 		input = [
-			'A','S','S','S','S','W','S','S','W','S',
-			'S','S','S','S','S','S','S','S','S','S',
-			'S','S','W','S','S','G','S','S','P','S',
-			'W','S','S','S','S','S','S','W','S','S',
-			'S','S','S','S','G','S','S','S','W','S',
-			'P','S','P','S','S','S','P','S','S','S',
-			'S','S','S','S','S','S','S','S','S','P',
-			'W','S','S','W','S','S','S','P','S','S',
-			'S','S','S','S','S','P','S','S','W','S',
-			'S','P','S','S','P','S','W','S','S','S'
+			'A','S','S','S','S','W','S','S','S','S',
+				'S','S','S','S','S','S','S','S','P','S',
+				'S','S','W','S','S','S','W','S','S','S',
+				'S','S','S','S','S','S','S','S','S','S',
+				'S','S','S','S','G','S','S','S','S','S',
+				'S','S','S','S','S','S','P','S','S','S',
+				'S','P','S','S','S','S','S','S','S','S',
+				'S','S','S','S','S','S','S','W','S','S',
+				'S','S','S','P','S','S','S','S','S','P',
+				'P','S','S','S','P','S','S','S','S','S'
 		];
 			
 		if(title===1){
@@ -54,16 +55,16 @@ console.log(title)
 		else if (title==="2"){
 			console.log(title)
 			input = [
-				'A','S','S','S','S','S','S','S','S','S',
-				'S','S','S','S','S','S','S','S','S','S',
-				'S','S','W','S','S','G','S','S','S','S',
+				'A','S','S','S','S','W','S','S','S','S',
+				'S','S','S','S','S','S','S','S','P','S',
+				'S','S','W','S','S','S','W','S','S','S',
 				'S','S','S','S','S','S','S','S','S','S',
 				'S','S','S','S','G','S','S','S','S','S',
 				'S','S','S','S','S','S','P','S','S','S',
-				'S','S','S','S','S','S','S','S','S','S',
-				'S','S','S','S','S','S','S','S','S','S',
-				'S','S','S','S','S','S','S','S','S','S',
-				'S','S','S','S','S','S','S','S','S','S'
+				'S','P','S','S','S','S','S','S','S','S',
+				'S','S','S','S','S','S','S','W','S','S',
+				'S','S','S','P','S','S','S','S','S','P',
+				'P','S','S','S','P','S','S','S','S','S'
 			];
 		}
 		else if (title==="3"){
@@ -71,7 +72,7 @@ console.log(title)
 			input = [
 				'A','S','S','S','S','W','S','S','W','S',
 				'S','S','S','S','S','S','S','S','S','S',
-				'S','S','W','S','S','G','S','S','P','S',
+				'S','S','W','S','S','S','W','S','P','S',
 				'S','S','S','S','S','S','S','S','S','S',
 				'S','S','S','S','G','S','S','S','W','S',
 				'S','S','P','S','S','S','P','S','S','S',
@@ -79,6 +80,54 @@ console.log(title)
 				'W','S','S','W','S','S','S','P','S','S',
 				'S','S','S','S','S','P','S','S','W','S',
 				'S','P','S','S','S','S','S','S','S','S'
+			];
+		}
+
+		else if (title==="4"){
+			console.log(title)
+			input = [
+				'A','S','S','S','S','W','S','S','S','S',
+				'S','S','S','S','S','S','S','S','S','P',
+				'W','S','W','S','S','G','S','S','S','S',
+				'S','S','S','S','S','S','S','W','S','S',
+				'S','S','S','S','P','S','S','S','S','S',
+				'S','S','S','S','S','S','P','S','S','S',
+				'S','S','S','S','S','S','S','S','P','S',
+				'S','P','S','S','S','S','S','S','S','S',
+				'S','S','S','S','P','S','S','S','S','S',
+				'S','S','S','P','S','S','W','S','S','S'
+			];
+		}
+
+		else if (title==="5"){
+			console.log(title)
+			input = [
+				'A','S','W','S','S','S','S','S','S','S',
+				'S','S','S','S','S','S','S','S','P','S',
+				'S','S','W','S','S','P','S','S','S','S',
+				'S','S','S','S','S','S','S','S','S','S',
+				'W','S','S','S','G','S','S','W','S','S',
+				'S','P','S','S','S','S','P','S','S','S',
+				'S','S','S','S','S','P','S','S','S','S',
+				'S','S','S','P','S','S','S','S','S','S',
+				'S','S','S','S','S','S','S','S','P','S',
+				'S','S','S','S','S','S','S','S','S','W'
+			];
+		}
+
+		else if (title==="8"){
+			console.log(title)
+			input = [
+				'A','S','S','S','S','W','S','S','W','S',
+			'S','S','S','S','S','S','S','S','S','S',
+			'S','S','W','S','S','S','P','S','S','S',
+			'W','S','S','S','S','S','S','S','S','S',
+			'S','S','S','S','S','S','S','S','W','S',
+			'S','S','P','S','S','S','P','S','S','S',
+			'S','S','S','S','S','S','S','S','S','P',
+			'W','S','S','G','S','S','S','P','S','S',
+			'S','S','S','S','S','P','S','S','W','S',
+			'S','P','S','S','P','S','W','S','S','S'
 			];
 		}
 		
@@ -153,11 +202,7 @@ console.log(title)
 				setStenches(arr)
 				cellStates[to] = 'stinky'
 		
-				if(cellStates[to-1]==="unvisited"){
-					
-					setMove( "left")
-					
-				}
+				
 			}
 			else if(checkForPit(to, cells)){
 				let arr = [...breezees]
@@ -167,13 +212,30 @@ console.log(title)
 			}
 			var min =0;
 			var up = 0,right =0 ,left =0, down=0;
-			if(calculateRisk((to-10),cellStates)===undefined)
+			if(calculateRisk((to-10),cellStates)===undefined && calculateRisk((to-1),cellStates)===undefined)
 			{
-			min = Math.min(calculateRisk((to+1),cellStates),calculateRisk((to-1),cellStates),calculateRisk((to+10),cellStates));
+			min = Math.min(calculateRiskTest(to,(to+1),cellStates),calculateRiskTest(to,(to+10),cellStates));
+			}
+			else if(calculateRisk((to-10),cellStates)===undefined)
+			{
+			min = Math.min(calculateRiskTest(to,(to+1),cellStates),calculateRiskTest(to,(to-1),cellStates),calculateRiskTest(to,(to+10),cellStates));
+			}
+			else if(calculateRisk((to+10),cellStates)===undefined)
+			{
+			min = Math.min(calculateRiskTest(to,(to+1),cellStates),calculateRiskTest(to,(to-1),cellStates),calculateRiskTest(to,(to-10),cellStates));
+			}
+			
+			else if((to+1)%10==0)
+			{
+			min = Math.min(calculateRiskTest(to,(to+10),cellStates),calculateRiskTest(to,(to-1),cellStates),calculateRiskTest(to,(to-10),cellStates));
+			}
+			else if((to-1)%10==9)
+			{
+			min = Math.min(calculateRiskTest(to,(to+10),cellStates),calculateRiskTest(to,(to+1),cellStates),calculateRiskTest(to,(to-10),cellStates));
 			}
 			else 
 			{
-			min = Math.min(calculateRisk((to-10),cellStates),calculateRisk((to+1),cellStates),calculateRisk((to-1),cellStates),calculateRisk((to+10),cellStates));
+			min = Math.min(calculateRiskTest(to,(to-10),cellStates),calculateRiskTest(to,(to+1),cellStates),calculateRiskTest(to,(to-1),cellStates),calculateRiskTest(to,(to+10),cellStates));
 			}
             up = calculateRisk((to-10),cellStates)
 			down = calculateRisk((to+10),cellStates)
@@ -182,35 +244,130 @@ console.log(title)
              var arr=[0,0,0,0];
 
 
-			console.log(calculateRisk((to+1),cellStates))
-			console.log(calculateRisk((to-1),cellStates))
-			console.log(calculateRisk((to+10),cellStates))
-			console.log(calculateRisk((to-10),cellStates))
-		
+			// console.log(calculateRisk((to+1),cellStates))
+			// console.log(calculateRisk((to-1),cellStates))
+			// console.log(calculateRisk((to+10),cellStates))
+			// console.log(calculateRisk((to-10),cellStates))
+		    console.log(calculateRiskTest(to,(to+1),cellStates))
+			console.log(calculateRiskTest(to,(to-1),cellStates))
+			console.log(calculateRiskTest(to,(to+10),cellStates))
+			console.log(calculateRiskTest(to,(to-10),cellStates))
+
 			console.log("Min = "+min)
-			console.log(previou[to])
-			console.log(to)
 			
-			if(min === calculateRisk((to+1),cellStates))
+			
+			if(min === calculateRiskTest(to,(to+1),cellStates))
 			{
-				setMove("Right")
+				// setMove("Right")
 				arr[0]=1;
 			}
-			else if(min === calculateRisk((to-1),cellStates))
+
+		    if(min === calculateRiskTest(to,(to-1),cellStates)&&(to-1)%10!==9)
 			{
-				setMove("Left")
+				// setMove("Left")
 				arr[1]=1;
 			}
-			else if(min === calculateRisk((to+10),cellStates))
+		    if(min === calculateRiskTest(to,(to+10),cellStates))
 			{
-				setMove("Down")
+				// setMove("Down")
 				arr[2]=1;
 			}
-			else if(min === calculateRisk((to-10),cellStates))
+		    if(min === calculateRiskTest(to,(to-10),cellStates))
 			{
-				setMove("Up")
+				// setMove("Up")
 				arr[3]=1;
 			 }
+			 let flag=[0,0,0,0,0];
+			 let i=0,j=0;
+			 for(;i<4;i++)
+			{
+				if(arr[i]===1)
+				{
+					j++;  
+                  flag[j]=i;
+				    
+				}
+			}
+			let m = Math.floor((Math.random() * j) + 1);;
+			console.log(m)
+			if(m===1)
+			{
+				if(flag[m]===0)
+				{
+					setMove("Right")
+				}
+				else if(flag[m]===1)
+				{
+					setMove("Left")
+				}
+				if(flag[m]===2)
+				{
+					setMove("Down")
+				}
+				if(flag[m]===3)
+				{
+					setMove("Up")
+				}
+			}
+			else if(m===2)
+			{
+				if(flag[m]===0)
+				{
+					setMove("Right")
+				}
+				else if(flag[m]===1)
+				{
+					setMove("Left")
+				}
+				if(flag[m]===2)
+				{
+					setMove("Down")
+				}
+				if(flag[m]===3)
+				{
+					setMove("Up")
+				}
+			}
+			else if(m===3)
+			{
+				if(flag[m]===0)
+				{
+					setMove("Right")
+				}
+				else if(flag[m]===1)
+				{
+					setMove("Left")
+				}
+				if(flag[m]===2)
+				{
+					setMove("Down")
+				}
+				if(flag[m]===3)
+				{
+					setMove("Up")
+				}
+			}
+			else if(m===4)
+			{
+				if(flag[m]===0)
+				{
+					setMove("Right")
+				}
+				else if(flag[m]===1)
+				{
+					setMove("Left")
+				}
+				if(flag[m]===2)
+				{
+					setMove("Down")
+				}
+				if(flag[m]===3)
+				{
+					setMove("Up")
+				}
+			}
+			console.log(flag[j])
+			console.log(j)
 			// up = calculateRisk((to-10),cellStates)
 			// down = calculateRisk((to+10),cellStates)
 			// right = calculateRisk((to+1),cellStates)
@@ -271,7 +428,7 @@ console.log(title)
 
 		},1000)
 	}
-
+    
 	const shootUp = () => {
 		let arr = [...stenches]
 		// arr[] = 0
@@ -484,18 +641,20 @@ console.log(title)
 								:
 								<></>
 						}
-					{
+					    {
 							num ==agentAddress && cells[num] === 'W'?
                             	<img src={wumpus} alt="wumpus" height={70} width={70}/>
 								:
 								<></>
 						}
+						
 						{
 							num ==agentAddress &&cells[num] === 'G'?
-                            	<img src={gold} alt="gold" height={70} width={70}/>
+                            	<img src={gold} alt="gold" height={200} width={200}/>
 								:
 								<></>
 						}
+						
 						{
 							num ==agentAddress &&cells[num] === 'P'?
                             	<img src={pit} alt="pit" height={70} width={70}/>
@@ -508,7 +667,7 @@ console.log(title)
                             	<img src={agent} alt="agent" height={70} width={70}/>
 								:
 								<></>
-						}
+						} */}
 						{
 							cells[num] === 'W'?
                             	<img src={wumpus} alt="wumpus" height={70} width={70}/>
@@ -517,7 +676,7 @@ console.log(title)
 						}
 						{
 							cells[num] === 'G'?
-                            	<img src={gold} alt="gold" height={70} width={70}/>
+                            	<img src={gold2} alt="gold" height={70} width={70}/>
 								:
 								<></>
 						}
@@ -550,7 +709,7 @@ console.log(title)
                             	<img src={gliter} alt="breeze_stench" height={70} width={70}/>
 								:
 								<></>
-						} */}
+						}
                     </div>
             </td>;
 	};
